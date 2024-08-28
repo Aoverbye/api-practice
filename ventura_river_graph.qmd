@@ -1,0 +1,40 @@
+---
+title: "usgs_data"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+```{r}
+library(tidyverse)
+library(dataRetrieval)
+
+```
+
+
+```{r}
+#set parameters for the query
+siteNumber <- "11118500"
+parameterCd <- "00060" # Discharge
+startDate <- "2023-08-19"
+endDate <- "2023-08-22"
+```
+
+```{r}
+#querry the APIs
+discharge <- readNWISdv(siteNumber, parameterCd, startDate, endDate)
+```
+
+```{r}
+ggplot(data = discharge, aes(x = Date, y = X_00060_00003)) +
+  geom_line() +
+  labs(x = "date", 
+       y = "discharge (ft³/s)",
+       title = "Discharge (ft³/s) for the Ventura River during Tropical Storm Hilary") +
+  geom_hline(yintercept = max_discharge, linetype = "dashed")
+ 
+  
+max_discharge <- max(discharge$X_00060_00003)
+```
+
+
